@@ -21,17 +21,26 @@ class castORM{
         return $this -> connexion;
     }
     public function save($cat){
-        var_dump($this->getDb());
-        var_dump($this->getTable());
-        $listColumns = implode("', '", $this->getColumns());
-        var_dump($listColumns);
-        var_dump($cat->name);
+
+        $listValues = [];
+        foreach ($cat as $key => $value){
+            array_push($listValues, '"'.$value.'"');
+        }
+        $listColumns = implode(', ', $this->getColumns());
+        $listValues = implode(', ',$listValues);
 
         $req = $this->getConnexion()->exec('INSERT INTO '.$this->getTable().' 
-        ("'.$listColumns.'") VALUES ("'.$cat->name.'", "'.$cat->age.'", "'.$cat->owner.'")');
-        //echo 'ok';
+        ('.$listColumns.') VALUES ('.$listValues.')');
         return $req;
     }
+    /*public function edit($id){
+        $req = $this->getConnexion()->exec('UPDATE animals SET name=\'nn\', age=12,owner=\'OOO\' WHERE id="'.$id.'" ');
+        var_dump($req);
+        //return $req;
+    }*/
+
+
+
 
     public function selectId($id){
         $req = $this->getConnexion()->query('SELECT * FROM '.$this->getTable().' WHERE id="'.$id.'" ');
