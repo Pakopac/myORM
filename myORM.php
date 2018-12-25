@@ -44,6 +44,10 @@ class castORM{
         $req = $this->getConnexion()->exec('UPDATE '.$this->getTable().' SET '.$listSet.' WHERE id='.$id.'');
         return $req;
     }
+    public function delete($id){
+        $req = $this->getConnexion()->exec('DELETE FROM '.$this->getTable().' WHERE id='.$id.'');
+        return $req;
+    }
 
     public function selectId($id){
         $req = $this->getConnexion()->query('SELECT * FROM '.$this->getTable().' WHERE id='.$id.'');
