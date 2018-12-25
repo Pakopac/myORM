@@ -19,6 +19,7 @@ $cat->name = "a";
 $cat->age = 1;
 $cat->owner = "b";
 $manager->save($cat);
+$manager->selectId(1);
 //TODO
 // on joue davantage
 //$vieuxKebab = $manager->giveMe("Kebab", 3);

@@ -20,9 +20,9 @@ class castORM{
     public function getConnexion(){
         return $this -> connexion;
     }
-    public function save($cat){
+    public function save($value){
         $listValues = [];
-        foreach ($cat as $key => $value){
+        foreach ($value as $key => $value){
             array_push($listValues, '"'.$value.'"');
         }
         $listColumns = implode(', ', $this->getColumns());
@@ -30,6 +30,12 @@ class castORM{
 
         $req = $this->getConnexion()->exec('INSERT INTO '.$this->getTable().' 
         ('.$listColumns.') VALUES ('.$listValues.')');
+        return $req;
+    }
+    public function selectId($id){
+        $req = $this->getConnexion()->exec('SELECT * FROM '.$this->getTable().' WHERE id='.$id.'');
+        var_dump('SELECT * FROM '.$this->getTable().' WHERE id='.$id.'');
+        var_dump($req);
         return $req;
     }
     /*public function edit($id){
