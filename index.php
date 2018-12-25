@@ -15,10 +15,11 @@ $manager->setConnexion($connexion);
 $manager->addModel("Animal","animals",array("name","age","owner"));
 // on joue avec
 $cat = new Animal();
-$cat->name = "a";
-$cat->age = 1;
-$cat->owner = "b";
-$manager->save($cat);
+$cat->name = "abc";
+$cat->age = 5;
+$cat->owner = "def";
+//$manager->save($cat);
+$manager->edit($cat,1);
 $manager->selectId(1);
 //TODO
 // on joue davantage
