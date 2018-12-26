@@ -21,6 +21,7 @@ $cat->owner = "def";
 //$manager->save($cat);
 $manager->edit($cat,1);
 $manager->selectId(1);
+$manager->selectAll();
 $manager->delete(150);
 //TODO
 // on joue davantage

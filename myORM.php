@@ -55,5 +55,12 @@ class castORM{
         $results = $req->fetchAll();
         return $results;
     }
+    public function selectAll(){
+        $req = $this->getConnexion()->query('SELECT * FROM '.$this->getTable().'');
+                                     $req->execute();
+        $results = $req->fetchAll();
+        var_dump($results);
+        return $results;
+    }
 
 }
