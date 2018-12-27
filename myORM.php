@@ -62,5 +62,13 @@ class castORM{
         var_dump($results);
         return $results;
     }
+    public function selectOrderBy($columnName,$order){
+        $req = $this->getConnexion()->query('SELECT * FROM '.$this->getTable().' ORDER BY '.$columnName.' '.$order.'');
+        $req->execute();
+        $results = $req->fetchAll();
+        var_dump($results);
+        return $results;
+    }
+    
 
 }

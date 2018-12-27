@@ -20,9 +20,10 @@ $cat->age = 5;
 $cat->owner = "def";
 //$manager->save($cat);
 $manager->edit($cat,1);
+$manager->delete(150);
 $manager->selectId(1);
 $manager->selectAll();
-$manager->delete(150);
+$manager->selectOrderBy('id','ASC');
 //TODO
 // on joue davantage
 //$vieuxKebab = $manager->giveMe("Kebab", 3);
