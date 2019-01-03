@@ -22,3 +22,4 @@ $cat->owner = "def";
 $manager->edit($cat,1);
 $manager->delete(150);
 $manager->select("name='abc'","id","ASC");
+$manager->count("*");

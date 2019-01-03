@@ -65,6 +65,18 @@ class castORM{
         var_dump($results);
         return $results;
     }
+
+    public function count($condition){
+        if($condition === '*'){
+            $req = $this->getConnexion()->query('SELECT COUNT(*) FROM ' . $this->getTable() .'');
+        }
+        else {
+            $req = $this->getConnexion()->query('SELECT COUNT(*) FROM ' . $this->getTable() . ' WHERE ' . $condition . '');
+        }
+        $req->execute();
+        $results = $req->fetchAll();
+        var_dump($results);
+    }
     
 
 }
