@@ -49,21 +49,17 @@ class castORM{
         return $req;
     }
 
-    public function selectId($id){
-        $req = $this->getConnexion()->query('SELECT * FROM '.$this->getTable().' WHERE id='.$id.'');
-                                    $req->execute();
-        $results = $req->fetchAll();
-        return $results;
-    }
-    public function selectAll(){
-        $req = $this->getConnexion()->query('SELECT * FROM '.$this->getTable().'');
-                                     $req->execute();
-        $results = $req->fetchAll();
-        var_dump($results);
-        return $results;
-    }
-    public function selectOrderBy($columnName,$order){
-        $req = $this->getConnexion()->query('SELECT * FROM '.$this->getTable().' ORDER BY '.$columnName.' '.$order.'');
+    public function select($id,$columnName = '',$order = ''){
+        $query = 'SELECT * FROM '.$this->getTable().'';
+        $req = $this->getConnexion()->query($query);
+        if($id !== '*') {
+            $query = $query. ' WHERE '. $id . '';
+            $req = $this->getConnexion()->query($query);
+        }
+        if($columnName !== '' && $order !== ''){
+            $query = $query.' ORDER BY '.$columnName.' '.$order.'';
+            $req = $this->getConnexion()->query($query);
+        }
         $req->execute();
         $results = $req->fetchAll();
         var_dump($results);

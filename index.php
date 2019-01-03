@@ -21,9 +21,4 @@ $cat->owner = "def";
 //$manager->save($cat);
 $manager->edit($cat,1);
 $manager->delete(150);
-$manager->selectId(1);
-$manager->selectAll();
-$manager->selectOrderBy('id','ASC');
-//TODO
-// on joue davantage
-//$vieuxKebab = $manager->giveMe("Kebab", 3);
+$manager->select("name='abc'","id","ASC");
