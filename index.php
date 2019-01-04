@@ -21,9 +21,14 @@ $cat->owner = "b";
 //$manager->save($cat);
 //$manager->edit($cat,1);
 //$manager->delete(150);
-//$manager->selectId(5);
+
+$manager->selectId(1);
+
 $manager->select();
 $manager->where("name=ok,id=2,age=2");
 $manager->orderBy("id","ASC");
 $manager->execute();
-//$manager->count("*");
+
+$manager->count();
+$manager->where("id=1");
+$manager->execute();

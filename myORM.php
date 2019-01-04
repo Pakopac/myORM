@@ -94,6 +94,10 @@ class castORM{
         $query=$query.' ORDER BY '.$columnName.' '.$order.'';
         return $this->setQuery($query);
     }
+    public function count(){
+        $query = 'SELECT COUNT(*) FROM ' . $this->getTable() .'';
+        return $this->setQuery($query);
+    }
     public function execute(){
         $query = $this->getQuery();
         var_dump($query);
