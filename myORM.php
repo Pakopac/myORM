@@ -65,42 +65,33 @@ class castORM{
         $req = $this->getConnexion()->query($query);
         $req->execute();
         $results = $req->fetchAll();
-        /*        var_dump($array);*/
+        echo "<pre>",var_dump($results),"</pre>";
         $this->logRequest($query);
         return $results;
     }
     public function select(){
         $query='SELECT * FROM '.$this->getTable().' ';
-        $this->setQuery($query);
-        $req = $this->getConnexion()->query($query);
-        $req->execute();
-        $results = $req->fetchAll();
-        //var_dump($results);
-        $this->logRequest($query);
-        return $results;
-    }
-    public function orderBy($columnName,$order){
-        $query = $this->getQuery();
-        $query=$query.' ORDER BY '.$columnName.' '.$order.'';
-        $this->setQuery($query);
-        $req = $this->getConnexion()->query($query);
-        $req->execute();
-        $results = $req->fetchAll();
-        $this->logRequest($query);
-        echo "<pre>",var_dump($results),"</pre>";
-        return $results;
+        return $this->setQuery($query);
     }
     public function where($condition){
         $query = $this->getQuery();
         $explode = explode('=',$condition);
         $condition = $explode[0].'="'.($explode[1]).'"';
         $query=$query.' WHERE '.$condition.'';
-        $this->setQuery($query);
+        return $this->setQuery($query);
+    }
+    public function orderBy($columnName,$order){
+        $query = $this->getQuery();
+        $query=$query.' ORDER BY '.$columnName.' '.$order.'';
+        return $this->setQuery($query);
+    }
+    public function execute(){
+        $query = $this->getQuery();
         $req = $this->getConnexion()->query($query);
         $req->execute();
         $results = $req->fetchAll();
         $this->logRequest($query);
-        //echo "<pre>",var_dump($results),"</pre>";
+        echo "<pre>",var_dump($results),"</pre>";
         return $results;
     }
     function logRequest($query){
