@@ -27,10 +27,11 @@ class castORM{
         }
         $listColumns = implode(', ', $this->getColumns());
         $listValues = implode(', ',$listValues);
-
-        $req = $this->getConnexion()->exec('INSERT INTO '.$this->getTable().' 
-        ('.$listColumns.') VALUES ('.$listValues.')');
-        return $req;
+        $query='INSERT INTO '.$this->getTable().' 
+        ('.$listColumns.') VALUES ('.$listValues.')';
+        $req = $this->getConnexion()->exec($query);
+        $array['query']=$query;
+        return $array;
     }
 
     public function edit($value,$id){
@@ -41,34 +42,60 @@ class castORM{
             array_push($listSet, $set);
         }
         $listSet = implode(', ',$listSet);
-        $req = $this->getConnexion()->exec('UPDATE '.$this->getTable().' SET '.$listSet.' WHERE id='.$id.'');
-        return $req;
+        $query='UPDATE '.$this->getTable().' SET '.$listSet.' WHERE id='.$id.'';
+        $req = $this->getConnexion()->exec($query);
+        $array['query']=$query;
+        return $array;
     }
     public function delete($id){
-        $req = $this->getConnexion()->exec('DELETE FROM '.$this->getTable().' WHERE id='.$id.'');
-        return $req;
+        $query='DELETE FROM '.$this->getTable().' WHERE id='.$id.'';
+        $req = $this->getConnexion()->exec($query);
+        $array['query']=$query;
+       /* var_dump($req);*/
+        return $array;
     }
 
     public function selectId($id){
-        $req = $this->getConnexion()->query('SELECT * FROM '.$this->getTable().' WHERE id='.$id.'');
-                                    $req->execute();
-        $results = $req->fetchAll();
-        return $results;
-    }
-    public function selectAll(){
-        $req = $this->getConnexion()->query('SELECT * FROM '.$this->getTable().'');
-                                     $req->execute();
-        $results = $req->fetchAll();
-        var_dump($results);
-        return $results;
-    }
-    public function selectOrderBy($columnName,$order){
-        $req = $this->getConnexion()->query('SELECT * FROM '.$this->getTable().' ORDER BY '.$columnName.' '.$order.'');
+        $query='SELECT * FROM '.$this->getTable().' WHERE id='.$id.'';
+        $req = $this->getConnexion()->query($query);
         $req->execute();
         $results = $req->fetchAll();
-        var_dump($results);
-        return $results;
-    }
-    
+        $array['results']=$results;
+        $array['query']=$query;
+        /*        var_dump($array);*/
 
+        return $array;
+    }
+    public function selectAll(){
+        $query='SELECT * FROM '.$this->getTable().' ';
+        $req = $this->getConnexion()->query($query);
+        $req->execute();
+        $results = $req->fetchAll();
+        $array['results']=$results;
+        $array['query']=$query;
+        /*        var_dump($array);*/
+
+        return $array;
+    }
+    public function selectOrderBy($columnName,$order){
+
+        $query='SELECT * FROM '.$this->getTable().' ORDER BY '.$columnName.' '.$order.'';
+        $req = $this->getConnexion()->query($query);
+        $req->execute();
+        $results = $req->fetchAll();
+        $array['results']=$results;
+        $array['query']=$query;
+/*        var_dump($array);*/
+
+        return $array;
+    }
+
+    function logRequest($query){
+        $date = new DateTime();
+        $dateString = $date->format('Y-m-d H:i:s');
+        $filePath =  "request.log";
+        $fp = fopen($filePath, "a+");
+        fputs($fp, "[".date('d/m/Y à H:i:s',time())."]" . "\"" . $query . "\"" .PHP_EOL);
+        fclose($fp);
+    }
 }
