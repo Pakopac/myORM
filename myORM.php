@@ -20,6 +20,12 @@ class castORM{
     public function getConnexion(){
         return $this -> connexion;
     }
+    public function setQuery($query){
+        return $this -> query = $query;
+    }
+    public function getQuery(){
+        return $this -> query;
+    }
     public function save($value){
         $listValues = [];
         foreach ($value as $key => $value){
@@ -27,12 +33,13 @@ class castORM{
         }
         $listColumns = implode(', ', $this->getColumns());
         $listValues = implode(', ',$listValues);
-
-        $req = $this->getConnexion()->exec('INSERT INTO '.$this->getTable().' 
-        ('.$listColumns.') VALUES ('.$listValues.')');
-        return $req;
+        $query='INSERT INTO '.$this->getTable().' 
+        ('.$listColumns.') VALUES ('.$listValues.')';
+        $req = $this->getConnexion()->exec($query);
+        $array['query']=$query;
+        $this->logRequest($query);
+        return $array;
     }
-
     public function edit($value,$id){
         $listSet = [];
         foreach ($value as $key => $value){
@@ -41,42 +48,67 @@ class castORM{
             array_push($listSet, $set);
         }
         $listSet = implode(', ',$listSet);
-        $req = $this->getConnexion()->exec('UPDATE '.$this->getTable().' SET '.$listSet.' WHERE id='.$id.'');
+        $query='UPDATE '.$this->getTable().' SET '.$listSet.' WHERE id='.$id.'';
+        $req = $this->getConnexion()->exec($query);
+        $this->logRequest($query);
         return $req;
     }
     public function delete($id){
-        $req = $this->getConnexion()->exec('DELETE FROM '.$this->getTable().' WHERE id='.$id.'');
+        $query='DELETE FROM '.$this->getTable().' WHERE id='.$id.'';
+        $req = $this->getConnexion()->exec($query);
+        /* var_dump($req);*/
+        $this->logRequest($query);
         return $req;
     }
-
-    public function select($id,$columnName = '',$order = ''){
-        $query = 'SELECT * FROM '.$this->getTable().'';
+    public function selectId($id){
+        $query='SELECT * FROM '.$this->getTable().' WHERE id='.$id.'';
         $req = $this->getConnexion()->query($query);
-        if($id !== '*') {
-            $query = $query. ' WHERE '. $id . '';
-            $req = $this->getConnexion()->query($query);
-        }
-        if($columnName !== '' && $order !== ''){
-            $query = $query.' ORDER BY '.$columnName.' '.$order.'';
-            $req = $this->getConnexion()->query($query);
-        }
         $req->execute();
         $results = $req->fetchAll();
-        var_dump($results);
+        /*        var_dump($array);*/
+        $this->logRequest($query);
         return $results;
     }
-
-    public function count($condition){
-        if($condition === '*'){
-            $req = $this->getConnexion()->query('SELECT COUNT(*) FROM ' . $this->getTable() .'');
-        }
-        else {
-            $req = $this->getConnexion()->query('SELECT COUNT(*) FROM ' . $this->getTable() . ' WHERE ' . $condition . '');
-        }
+    public function select(){
+        $query='SELECT * FROM '.$this->getTable().' ';
+        $this->setQuery($query);
+        $req = $this->getConnexion()->query($query);
         $req->execute();
         $results = $req->fetchAll();
-        var_dump($results);
+        //var_dump($results);
+        $this->logRequest($query);
+        return $results;
     }
-    
-
+    public function orderBy($columnName,$order){
+        $query = $this->getQuery();
+        $query=$query.' ORDER BY '.$columnName.' '.$order.'';
+        $this->setQuery($query);
+        $req = $this->getConnexion()->query($query);
+        $req->execute();
+        $results = $req->fetchAll();
+        $this->logRequest($query);
+        echo "<pre>",var_dump($results),"</pre>";
+        return $results;
+    }
+    public function where($condition){
+        $query = $this->getQuery();
+        $explode = explode('=',$condition);
+        $condition = $explode[0].'="'.($explode[1]).'"';
+        $query=$query.' WHERE '.$condition.'';
+        $this->setQuery($query);
+        $req = $this->getConnexion()->query($query);
+        $req->execute();
+        $results = $req->fetchAll();
+        $this->logRequest($query);
+        //echo "<pre>",var_dump($results),"</pre>";
+        return $results;
+    }
+    function logRequest($query){
+        $date = new DateTime();
+        $dateString = $date->format('Y-m-d H:i:s');
+        $filePath =  "request.log";
+        $fp = fopen($filePath, "a+");
+        fputs($fp, "[".date('d/m/Y à H:i:s',time())."]" . "\"" . $query . "\"" .PHP_EOL);
+        fclose($fp);
+    }
 }
