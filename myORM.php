@@ -74,10 +74,19 @@ class castORM{
         return $this->setQuery($query);
     }
     public function where($condition){
+        $list = [];
         $query = $this->getQuery();
-        $explode = explode('=',$condition);
-        $condition = $explode[0].'="'.($explode[1]).'"';
-        $query=$query.' WHERE '.$condition.'';
+        $separate = explode(',',$condition);
+        $explode = explode('=',$separate[0]);
+        $separate[0] = $explode[0].'="'.($explode[1]).'"';
+        $query=$query.' WHERE '.$separate[0].'';
+        if(count($separate) > 1) {
+            for ($i = 1; $i < count($separate); $i++) {
+                $explode = explode('=',$separate[$i]);
+                $separate[$i] = $explode[0].'="'.($explode[1]).'"';
+                $query .= ' AND ' . $separate[$i] . '';
+            }
+        }
         return $this->setQuery($query);
     }
     public function orderBy($columnName,$order){
@@ -87,6 +96,7 @@ class castORM{
     }
     public function execute(){
         $query = $this->getQuery();
+        var_dump($query);
         $req = $this->getConnexion()->query($query);
         $req->execute();
         $results = $req->fetchAll();
