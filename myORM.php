@@ -171,6 +171,32 @@ class castORM{
     }
 
 
+    public function exists($table)
+    {
+
+        $query = "SELECT *" ." FROM " . $table  ;
+        $req = $this->getConnexion()->query($query);
+
+        $timestamp_debut = microtime(true);
+        $timestamp_fin = microtime(true);
+        $time = $timestamp_fin - $timestamp_debut;
+        $args = func_get_args();
+       /* var_dump($args);*/
+        if (!empty($args) ){
+            foreach ($args as $arg) {
+                $args;
+            }
+        }
+        else{
+            $arg= "none";
+        }
+        $this->logRequest($query, $time, $arg);
+        var_dump(!empty($req));
+        return !empty($req);
+
+    }
+
+
     function logRequest($query, $time, $arg_list){
         date_default_timezone_set('Europe/Paris');
         $filePath =  "request.log";
