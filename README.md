@@ -129,6 +129,8 @@ $manager->execute();
 <h3>Exists</h3>
 
 Check if value exist:
+
 ```php
-$manager->exists();
+//here we check if one or many line has name bob and age 6
+$manager->exists("name=bob,age=6");
 ```

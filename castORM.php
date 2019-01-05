@@ -171,16 +171,26 @@ class castORM{
             }
         }
         $this->logRequest($query, $time, $arg_list);
-        echo "<pre>",var_dump($results),"</pre>";
-        return $results;
+        return intval($results[0][0]);
     }
-    public function exists(){
+    public function exists($condition){
 
-        $timestamp_debut = microtime(true);
-        $query = "SELECT *" ." FROM " . $this->getTable()  ;
+        $timestamp_start = microtime(true);
+        $separate = explode(',',$condition);
+        $explode = explode('=',$separate[0]);
+        $separate[0] = $explode[0].'="'.($explode[1]).'"';
+        $query="SELECT *" ." FROM " . $this->getTable().' WHERE '.$separate[0].'';
+        if(count($separate) > 1) {
+            for ($i = 1; $i < count($separate); $i++) {
+                $explode = explode('=',$separate[$i]);
+                $separate[$i] = $explode[0].'="'.($explode[1]).'"';
+                $query .= ' AND ' . $separate[$i] . '';
+            }
+        }
         $req = $this->getConnexion()->query($query);
-        $timestamp_fin = microtime(true);
-        $time = $timestamp_fin - $timestamp_debut;
+        $result = $req->fetchAll();
+        $timestamp_end = microtime(true);
+        $time = $timestamp_end - $timestamp_start;
         $args = func_get_args();
         $arg_list = [];
         if (!empty($args)){
@@ -189,7 +199,12 @@ class castORM{
             }
         }
         $this->logRequest($query, $time, $arg_list);
-        return $req;
+        if($result) {
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     function logRequest($query, $time, $arg_list){

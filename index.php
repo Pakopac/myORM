@@ -7,7 +7,7 @@ class Animal{
     public $owner;
 }
 
-$connexion = new PDO("mysql:host=yourHost;dbname=yourDbname", "user", "password");
+$connexion = new PDO("mysql:host=localhost;dbname=myORM", "root", "");
 
 $manager = new castORM();
 $manager->setConnexion($connexion);
@@ -35,7 +35,7 @@ $manager->orderBy("id","DESC");
 $manager->execute();
 
 $manager->count();
-$manager->where("id=1");
+$manager->where("name=bob");
 $manager->execute();
 
-$manager->exists();
+$manager->exists("name=bob,age=6");
