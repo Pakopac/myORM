@@ -75,12 +75,14 @@ $manager->selectId(1);
 ```
 
 <h5>Select all</h5>
+
 ```php
 $manager->select();
 $manager->execute();
 ```
 
 <h5>Select with conditions</h5>
+
 ```php
 $manager->select();
 //one condition
@@ -89,13 +91,17 @@ $manager->where("age=6");
 $manager->where("name=Bob,age=6,owner=David");
 $manager->execute();
 ```
+
 <h5>Select order by</h5>
+
 ```php
 $manager->select();
 $manager->orderBy("id","DESC");
 $manager->execute();
 ```
+
 <h5>Select with conditions order by</h5>
+
 ```php
 $manager->select();
 $manager->where("age=6");
@@ -106,11 +112,14 @@ $manager->execute();
 <h3>Count</h3>
 
 <h5>Count all</h5>
+
 ```php
 $manager->count();
 $manager->execute();
 ```
+
 <h5>Count with conditions</h5>
+
 ```php
 $manager->count();
 $manager->where("age=6");
