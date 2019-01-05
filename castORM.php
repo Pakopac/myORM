@@ -26,12 +26,6 @@ class castORM{
     public function getQuery(){
         return $this -> query;
     }
-    public function setTime($time){
-        return $this -> time = $time;
-    }
-    public function getTime(){
-        return $this -> time;
-    }
     public function save($value){
 
         $listValues = [];
@@ -121,7 +115,6 @@ class castORM{
             }
         }
         $this->logRequest($query, $time, $arg_list);
-        echo "<pre>",var_dump($results),"</pre>";
         return $results;
     }
     public function select(){
@@ -171,7 +164,12 @@ class castORM{
             }
         }
         $this->logRequest($query, $time, $arg_list);
-        return intval($results[0][0]);
+        if(count($results[0]) === 2){
+            return intval($results[0][0]);
+        }
+        else{
+            return($results);
+        }
     }
     public function exists($condition){
 
