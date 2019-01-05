@@ -26,21 +26,40 @@ class castORM{
     public function getQuery(){
         return $this -> query;
     }
+    public function setTime($time){
+        return $this -> time = $time;
+    }
+    public function getTime(){
+        return $this -> time;
+    }
     public function save($value){
+
         $listValues = [];
         foreach ($value as $key => $value){
             array_push($listValues, '"'.$value.'"');
         }
         $listColumns = implode(', ', $this->getColumns());
         $listValues = implode(', ',$listValues);
+
+        $timestamp_start = microtime(true);
         $query='INSERT INTO '.$this->getTable().' 
         ('.$listColumns.') VALUES ('.$listValues.')';
         $req = $this->getConnexion()->exec($query);
-        $array['query']=$query;
-        $this->logRequest($query);
-        return $array;
+        $timestamp_end = microtime(true);
+        $time = $timestamp_end - $timestamp_start;
+
+        $args = func_get_args();
+        $arg_list = [];
+        if (!empty($args)){
+            foreach ($args as $arg) {
+                array_push($arg_list,$arg);
+            }
+        }
+        $this->logRequest($query, $time, $arg_list);
+        return $req;
     }
     public function edit($value,$id){
+
         $listSet = [];
         foreach ($value as $key => $value){
             $value = '"'.$value.'"';
@@ -48,25 +67,61 @@ class castORM{
             array_push($listSet, $set);
         }
         $listSet = implode(', ',$listSet);
+
+        $timestamp_start = microtime(true);
         $query='UPDATE '.$this->getTable().' SET '.$listSet.' WHERE id='.$id.'';
         $req = $this->getConnexion()->exec($query);
-        $this->logRequest($query);
+        $timestamp_end = microtime(true);
+        $time = $timestamp_end - $timestamp_start;
+
+        $args = func_get_args();
+        $arg_list = [];
+        if (!empty($args)){
+            foreach ($args as $arg) {
+                array_push($arg_list,$arg);
+            }
+        }
+        $this->logRequest($query, $time, $arg_list);
         return $req;
     }
     public function delete($id){
+
+        $timestamp_start = microtime(true);
         $query='DELETE FROM '.$this->getTable().' WHERE id='.$id.'';
         $req = $this->getConnexion()->exec($query);
-        /* var_dump($req);*/
-        $this->logRequest($query);
+        $timestamp_end = microtime(true);
+        $time = $timestamp_end - $timestamp_start;
+
+        $args = func_get_args();
+        $arg_list = [];
+        if (!empty($args)){
+            foreach ($args as $arg) {
+                array_push($arg_list,$arg);
+            }
+        }
+        $this->logRequest($query, $time, $arg_list);
         return $req;
     }
+
     public function selectId($id){
+
+        $timestamp_start = microtime(true);
         $query='SELECT * FROM '.$this->getTable().' WHERE id='.$id.'';
         $req = $this->getConnexion()->query($query);
         $req->execute();
         $results = $req->fetchAll();
+        $timestamp_end = microtime(true);
+        $time = $timestamp_end - $timestamp_start;
+
+        $args = func_get_args();
+        $arg_list = [];
+        if (!empty($args) ){
+            foreach ($args as $arg) {
+                array_push($arg_list,$arg);
+            }
+        }
+        $this->logRequest($query, $time, $arg_list);
         echo "<pre>",var_dump($results),"</pre>";
-        $this->logRequest($query);
         return $results;
     }
     public function select(){
@@ -99,21 +154,50 @@ class castORM{
         return $this->setQuery($query);
     }
     public function execute(){
+
+        $timestamp_start = microtime(true);
         $query = $this->getQuery();
-        var_dump($query);
         $req = $this->getConnexion()->query($query);
         $req->execute();
+        $timestamp_end = microtime(true);
+        $time = $timestamp_end - $timestamp_start;
+
         $results = $req->fetchAll();
-        $this->logRequest($query);
+        $args = func_get_args();
+        $arg_list = [];
+        if (!empty($args)){
+            foreach ($args as $arg) {
+                array_push($arg_list,$arg);
+            }
+        }
+        $this->logRequest($query, $time, $arg_list);
         echo "<pre>",var_dump($results),"</pre>";
         return $results;
     }
-    function logRequest($query){
-        $date = new DateTime();
-        $dateString = $date->format('Y-m-d H:i:s');
+    public function exists(){
+
+        $timestamp_debut = microtime(true);
+        $query = "SELECT *" ." FROM " . $this->getTable()  ;
+        $req = $this->getConnexion()->query($query);
+        $timestamp_fin = microtime(true);
+        $time = $timestamp_fin - $timestamp_debut;
+        $args = func_get_args();
+        $arg_list = [];
+        if (!empty($args)){
+            foreach ($args as $arg) {
+                array_push($arg_list,$arg);
+            }
+        }
+        $this->logRequest($query, $time, $arg_list);
+        return $req;
+    }
+
+    function logRequest($query, $time, $arg_list){
+        $arg_list = implode(', ',$arg_list);
+        date_default_timezone_set('Europe/Paris');
         $filePath =  "request.log";
         $fp = fopen($filePath, "a+");
-        fputs($fp, "[".date('d/m/Y à H:i:s',time())."]" . "\"" . $query . "\"" .PHP_EOL);
+        fputs($fp, "[".date('d/m/Y à H:i:s',time())."]" . "\"" . $query . "\"" . " ".'| Exécution du script : ' . $time . ' secondes.' .' parameter : ' .$arg_list .PHP_EOL);
         fclose($fp);
     }
 }
