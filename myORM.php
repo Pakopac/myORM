@@ -182,15 +182,19 @@ class castORM{
         $time = $timestamp_fin - $timestamp_debut;
         $args = func_get_args();
        /* var_dump($args);*/
+
         if (!empty($args) ){
             foreach ($args as $arg) {
                 $args;
             }
         }
+
         else{
             $arg= "none";
+
         }
         $this->logRequest($query, $time, $arg);
+
         var_dump(!empty($req));
         return !empty($req);
 
@@ -202,6 +206,13 @@ class castORM{
         $filePath =  "request.log";
         $fp = fopen($filePath, "a+");
         fputs($fp, "[".date('d/m/Y à H:i:s',time())."]" . "\"" . $query . "\"" . " ".'| Exécution du script : ' . $time . ' secondes.' .' parameter : ' .$arg_list .PHP_EOL);
+        fclose($fp);
+    }
+    function errorRequest($query, $arg, $error){
+        date_default_timezone_set('Europe/Paris');
+        $filePath =  "error.log";
+        $fp = fopen($filePath, "a+");
+        fputs($fp, "[".date('d/m/Y à H:i:s',time())."]" . "\"" . $query . "\"" . " ".'| Exécution du script : ' . $arg . ' secondes.' .' parameter : ' .$error .PHP_EOL);
         fclose($fp);
     }
 }
