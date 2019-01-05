@@ -1,4 +1,4 @@
-#How to use castORM
+<h1>How to use castORM</h1>
 
 First include this
 
@@ -51,7 +51,7 @@ $manager->save($cat);
 
 if you wan't edit a line get the id of line and use the function like that:
 
-```php
+``` php
 $cat = new Animal();
 $cat->name = "Bob";
 $cat->age = 6;
@@ -62,7 +62,7 @@ $manager->edit($cat,1);
 
 <h3>Delete</h3>
 
-```php
+``` php
 // 1 is the id of line
 $manager->delete(1);
 ```
@@ -74,7 +74,7 @@ $manager->delete(1);
 $manager->selectId(1);
 ```
 
-<h5>Select all<h5>
+<h5>Select all</h5>
 ```php
 $manager->select();
 $manager->execute();
@@ -105,7 +105,7 @@ $manager->execute();
 
 <h3>Count</h3>
 
-<h5>Count all</h4>
+<h5>Count all</h5>
 ```php
 $manager->count();
 $manager->execute();
